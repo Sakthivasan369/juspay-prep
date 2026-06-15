@@ -1,0 +1,376 @@
+
+
+Locking Tree Problem Description
+
+You are given an **M-ary tree** (each node can have at most M children).
+
+Each node supports **3 operations**:
+
+1. **Lock(node, userId)**
+2. **Unlock(node, userId)**
+3. **Upgrade(node, userId)**
+
+---
+
+# Data stored in each node
+
+```cpp
+Node {
+    string name;
+    Node* parent;
+    vector<Node*> children;
+
+    bool isLocked;
+    int uid;                  // user who locked it
+    int ndsc;                 // number of locked descendants
+}
+```
+
+---
+
+# 1. Lock Operation
+
+## Conditions to lock a node
+
+A node **can be locked** only if:
+
+### Condition 1:
+
+The node itself should not be locked.
+
+```
+node.isLocked == false
+```
+
+### Condition 2:
+
+None of its ancestors should be locked.
+
+```
+root
+ |
+ A (locked)
+ |
+ B
+
+Lock(B) ❌
+```
+
+### Condition 3:
+
+None of its descendants should be locked.
+
+```
+A
+|
+B (locked)
+
+Lock(A) ❌
+```
+
+---
+
+## If all conditions satisfy:
+
+```cpp
+node.isLocked = true;
+node.uid = userId;
+```
+
+Update all ancestors:
+
+```cpp
+ancestor.ndsc++;
+```
+
+---
+
+# 2. Unlock Operation
+
+## Conditions
+
+### Condition 1:
+
+Node must already be locked.
+
+### Condition 2:
+
+It should be locked by the **same user**.
+
+```
+A locked by User 1
+
+unlock(A, User 2) ❌
+
+unlock(A, User 1) ✅
+```
+
+---
+
+## If valid:
+
+```cpp
+node.isLocked = false;
+node.uid = 0;
+```
+
+Update ancestors:
+
+```cpp
+ancestor.ndsc--;
+```
+
+---
+
+# 3. Upgrade Operation
+
+Upgrade means:
+
+> Lock the current node and unlock all locked descendants.
+
+---
+
+## Conditions for Upgrade
+
+### Condition 1:
+
+Current node should NOT be locked.
+
+```
+node.isLocked == false
+```
+
+---
+
+### Condition 2:
+
+It should have **at least one locked descendant**.
+
+```
+node.ndsc > 0
+```
+
+---
+
+### Condition 3:
+
+None of the ancestors should be locked.
+
+```
+Root (locked)
+ |
+ A
+
+Upgrade(A) ❌
+```
+
+---
+
+### Condition 4:
+
+All locked descendants must be locked by the **same user**.
+
+Example:
+
+```
+A
+├── B (User 1)
+└── C (User 1)
+
+Upgrade(A, User 1) ✅
+```
+
+---
+
+Not allowed:
+
+```
+A
+├── B (User 1)
+└── C (User 2)
+
+Upgrade(A, User 1) ❌
+```
+
+---
+
+# Upgrade Steps
+
+If all conditions satisfy:
+
+### Step 1:
+
+Unlock all locked descendants.
+
+```cpp
+release_all_descendants()
+```
+
+Update ancestors:
+
+```cpp
+ancestor.ndsc--;
+```
+
+---
+
+### Step 2:
+
+Lock the current node.
+
+```cpp
+node.isLocked = true;
+node.uid = userId;
+```
+
+Update ancestors:
+
+```cpp
+ancestor.ndsc++;
+```
+
+---
+
+# Why maintain `ndsc` ?
+
+`ndsc` = Number of locked descendants.
+
+Without this:
+
+Checking descendants:
+
+```cpp
+O(N)
+```
+
+With this:
+
+```cpp
+if(node.ndsc == 0)
+```
+
+becomes
+
+```cpp
+O(1)
+```
+
+---
+
+# Important Functions
+
+### Check ancestors:
+
+Go upward using parent pointer.
+
+```cpp
+while(node){
+    if(node->isLocked) return false;
+    node=node->parent;
+}
+```
+
+Complexity:
+
+```
+O(height)
+```
+
+---
+
+### Check descendants:
+
+DFS/BFS traversal.
+
+Used during:
+
+* Upgrade
+* Validation of same user
+
+Complexity:
+
+```
+O(size of subtree)
+```
+
+---
+
+### Update ancestors:
+
+Whenever lock/unlock happens:
+
+Move upwards.
+
+```cpp
+while(parent){
+    parent->ndsc += value;
+    parent = parent->parent;
+}
+```
+
+Complexity:
+
+```
+O(height)
+```
+
+---
+
+# Complexities
+
+### Lock:
+
+```
+O(height + descendant check)
+
+Optimized:
+O(height)
+```
+
+---
+
+### Unlock:
+
+```
+O(height)
+```
+
+---
+
+### Upgrade:
+
+```
+O(number of descendants)
+```
+
+because we may need to unlock all descendants.
+
+---
+
+# Interview Flow
+
+When asked:
+
+> "Design a Locking Tree"
+
+Say:
+
+1. Use a tree with parent pointers.
+2. Maintain lock state and owner id.
+3. Maintain count of locked descendants.
+4. Lock checks:
+
+   * node unlocked
+   * ancestors unlocked
+   * descendants unlocked
+5. Unlock checks:
+
+   * node locked
+   * same user
+6. Upgrade checks:
+
+   * node unlocked
+   * has locked descendants
+   * ancestors unlocked
+   * all locked descendants belong to same user
+7. Update ancestor counts during lock/unlock.

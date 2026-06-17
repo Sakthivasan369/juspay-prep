@@ -1,0 +1,2 @@
+You are organizing a classroom where n students are currently sitting in scattered seats. To make group activities easier, you want to rearrange the students so they sit in consecutive seats, minimizing the number of moves. Find the minimum number of moves required to arrange all the students in consecutive seats. In 1 move you can move 1 student to any arbitrary position.
+• 1 ≤ n ≤ 105 • 1 ≤ a[i] ≤ 10

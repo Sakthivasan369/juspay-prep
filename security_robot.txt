@@ -1,0 +1,4 @@
+In a futuristic robot factory, a charging robot manages battery modules represented as a sequence of states, denoted by the characters D and E. The robot can perform two types of conversions to upgrade the batteries and gain energy units:
+1. Find a substring DE and convert it into EC, gaining one energy unit.
+2. Find a substring ED and convert it into CE, gaining one energy unit.
+Your goal is to determine the maximum number of energy units the robot can collect by performing these conversions on the battery modules.

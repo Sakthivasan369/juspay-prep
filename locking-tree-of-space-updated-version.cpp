@@ -11,7 +11,7 @@ struct TreeNode {
 
     // Optimization: Initialize using an initialization list for slight performance gain
     TreeNode(string s) : name(s), isLocked(false), lockedBy(0), 
-                         parent(nullptr), lockedDescendantsCount(0) {}
+                         parent(nullptr) , lockedDescendantsCount(0) {}
 };
 
 class LockingTree {
@@ -98,7 +98,7 @@ public:
         if (!node->isLocked || node->lockedBy != uid) return false;
 
         node->isLocked = false;
-        node->lockedBy = 0;
+        node->lockedBy = 
 
         TreeNode* temp = node->parent;
         while (temp != nullptr) {

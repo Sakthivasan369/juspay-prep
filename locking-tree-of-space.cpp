@@ -24,7 +24,7 @@ private:
 
 public:
     LockingTree(const vector<string>& names) {
-        for (auto &s : names)
+       && for (auto &s : names)
             mp[s] = new TreeNode(s);
     }
 
@@ -166,4 +166,3 @@ int main() {
     }
 
     return 0;
-}

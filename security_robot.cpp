@@ -12,7 +12,7 @@ int solve(string s){
             int j=i;
             while( j<n&& s[j]=='D' ) j++;
             ans.push_back(j-i);
-            i=j;
+            i=j-1;
          }
          else{
 
@@ -20,7 +20,8 @@ int solve(string s){
          }
     }
     sort(ans.rbegin(),ans.rend());
-    int final_sum=accumulate(ans.begin(),ans.begin()+e,0);
+    int take=min(e,int(ans.size()));
+    int final_sum=accumulate(ans.begin(),ans.begin()+take,0);
     return final_sum;
     
 }
@@ -28,5 +29,5 @@ int main(){
     cout<<"Enter the string : ";
     string s;
     cin>>s;
-    cout<<"MAX_ENERGY_GAIN"<<solve(s);
+    cout<<"MAX_ENERGY_GAIN : "<<solve(s);
 }

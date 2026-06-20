@@ -57,6 +57,14 @@ private:
             temp = temp->parent;
         }
     }
+    bool check_ancestors(TreeNode* node){
+          TreeNode* temp = node->parent;
+        while (temp != nullptr) {
+            if (temp->isLocked) return false;
+            temp = temp->parent;
+        }
+        return true;
+    }
 
 public:
     LockingTree(const vector<string>& names) {
@@ -80,11 +88,7 @@ public:
         if (node->isLocked || node->lockedDescendantsCount > 0) return false;
 
         // 2. Check ancestors
-        TreeNode* temp = node->parent;
-        while (temp != nullptr) {
-            if (temp->isLocked) return false;
-            temp = temp->parent;
-        }
+       if(!check_ancestors(node)) return false;
 
         // 3. Lock the node
         node->isLocked = true;
@@ -101,7 +105,7 @@ public:
         if (!node->isLocked || node->lockedBy != uid) return false;
 
         node->isLocked = false;
-        node->lockedBy = 
+        node->lockedBy = 0;
 
         update_ancestors(node,-1);
         return true;
@@ -114,11 +118,7 @@ public:
         if (node->isLocked || node->lockedDescendantsCount == 0) return false;
 
         // 2. Check ancestors are not locked
-        TreeNode* temp = node->parent;
-        while (temp != nullptr) {
-            if (temp->isLocked) return false;
-            temp = temp->parent;
-        }
+       if(!check_ancestors(node)) return false;
 
         // 3. Verify all locked descendants belong to the user (Fast DFS instead of BFS)
         for (TreeNode* child : node->children) {

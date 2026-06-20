@@ -103,11 +103,7 @@ public:
         node->isLocked = false;
         node->lockedBy = 
 
-        TreeNode* temp = node->parent;
-        while (temp != nullptr) {
-            temp->lockedDescendantsCount--;
-            temp = temp->parent;
-        }
+        update_ancestors(node,-1);
         return true;
     }
 

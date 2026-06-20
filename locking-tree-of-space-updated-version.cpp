@@ -50,6 +50,13 @@ private:
         }
         return freedCount;
     }
+    void update_ancestors(TreeNode* node,int offset){
+       TreeNode* temp = node->parent;
+        while (temp != nullptr) {
+            temp->lockedDescendantsCount += netChange;
+            temp = temp->parent;
+        }
+    }
 
 public:
     LockingTree(const vector<string>& names) {
@@ -84,11 +91,7 @@ public:
         node->lockedBy = uid;
 
         // 4. Update ancestors
-        temp = node->parent;
-        while (temp != nullptr) {
-            temp->lockedDescendantsCount++;
-            temp = temp->parent;
-        }
+        update_ancestors(node,1);
         return true;
     }
 
@@ -139,11 +142,7 @@ public:
         // 6. BATCH UPDATE: Update ancestors EXACTLY ONCE with the net change
         // Net change = +1 (current node locked) - totalFreed (children unlocked)
         int netChange = 1 - totalFreed;
-        temp = node->parent;
-        while (temp != nullptr) {
-            temp->lockedDescendantsCount += netChange;
-            temp = temp->parent;
-        }
+        update_ancestors(node,netChange);
 
         return true;
     }

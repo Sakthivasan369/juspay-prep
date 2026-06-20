@@ -1,0 +1,5 @@
+.venv/
+input.txt
+output.txt
+final_oa_part_a
+!*.cpp

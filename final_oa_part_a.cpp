@@ -167,6 +167,8 @@ public:
 };
 
 int main() {
+    freopen("tle_testcase.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
@@ -208,5 +210,3 @@ int main() {
 }
 
 
-
-Optimized final

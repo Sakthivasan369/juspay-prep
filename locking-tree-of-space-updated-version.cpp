@@ -53,7 +53,7 @@ private:
     void update_ancestors(TreeNode* node,int offset){
        TreeNode* temp = node->parent;
         while (temp != nullptr) {
-            temp->lockedDescendantsCount += netChange;
+            temp->lockedDescendantsCount += offset;
             temp = temp->parent;
         }
     }
